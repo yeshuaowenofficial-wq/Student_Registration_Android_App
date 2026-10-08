@@ -1,0 +1,306 @@
+ICT361 group lab — notes on the backend/networking wiring
+===========================================================
+Written by: backend/database team
+Covers: what's now linked to the Node/Express + MySQL backend, and how
+the UI/UX team and the local storage/sync team should build on top of it.
+
+--------------------------------------------------------------------
+MERGE UPDATE: local storage/sync team's Room work has landed
+--------------------------------------------------------------------
+This commit merges in the first Room draft the local-storage/sync team
+pushed (a new `data` package: AppDatabase.java, StudentDao.java, and a
+Room-entity Student.java). Nothing in it was rewritten — it's copied in
+as submitted — but it was NOT wired into StudentRepository/ViewModel yet,
+because its fields don't line up with the real student record yet. Before
+building an OfflineFirstStudentRepository on top of it (see section 3
+below, which still describes the target approach), this needs fixing:
+
+  Current data/Student.java (Room entity) has:
+    id (auto-generated int), name, studentNumber, email
+
+  What it actually needs to cache (matching network/dto/StudentDto.java,
+  which mirrors the real backend table — see backend/sql/schema.sql):
+    student_id   (String — the server's UUID; must NOT auto-generate a
+                  local int, since this id has to match the server's
+                  immutable student_id for sync to ever work)
+    student_number, student_name, program_code, group_code, status, version
+  ...plus local-only bookkeeping columns an offline queue needs:
+    sync_state (e.g. SYNCED / PENDING / SYNCING / ERROR — see the lab's
+                required states in Activity E)
+    pending_operation_id (the SAME uuid reused on every WorkManager retry
+                — see the idempotency paragraph in section 3, point 3)
+
+  There's no `email` field anywhere in the lab spec or the backend schema
+  — that looks like a leftover from a different starter template; worth
+  double-checking before building more on top of it.
+
+  Also: data.Student and model.Student are two DIFFERENT classes (Room
+  entity vs. UI-facing domain model) that happen to share a simple class
+  name in different packages. That's intentional layering (see section 3,
+  point 1) and compiles fine, but import BOTH in the same file and the
+  compiler will make you fully-qualify one of them — not a bug, just
+  something to expect.
+
+  Build files: Room's dependencies (room-runtime, room-compiler) are now
+  declared in gradle/libs.versions.toml and wired into app/build.gradle.kts
+  alongside Retrofit/OkHttp — both stacks now live in one Gradle module,
+  nothing to configure further there.
+
+  Verification note: this merge was checked with the same method as the
+  original network wiring (see "How this was verified" below) — a full
+  syntax pass found nothing wrong, and all 3 Room files compile cleanly
+  against stubs matching androidx.room's real annotations/classes. That
+  confirms the Java is structurally sound, but it has NOT been run
+  through Room's real annotation processor (unreachable from this
+  sandbox), so do a real Android Studio Gradle sync before trusting it
+  fully — in particular, Room can be picky about entity constructors
+  (it needs either a no-arg constructor, one matching every field, or
+  @Ignore on the ones it shouldn't use) and the current 3-arg constructor
+  alongside a 4th auto-generated `id` field is the kind of thing worth
+  double-checking compiles and runs once Gradle can actually invoke Room's
+  compiler.
+
+--------------------------------------------------------------------
+0. WHAT CHANGED IN THIS COMMIT
+--------------------------------------------------------------------
+The app previously had only template code: a Student(id, name) model, a
+FakeStudentRepository, a StudentRepository interface with 2 methods, and
+two default nav-template fragments. None of it talked to a server.
+
+Added:
+  - com.example.ict361_lab.network            (new package)
+      ApiClient.java        Retrofit/OkHttp singleton (base URL, auth, logging)
+      ApiService.java       every route from backend/API_CONTRACT.md
+      AuthInterceptor.java  attaches the JWT to outgoing requests
+      TokenStore.java       SharedPreferences session store (token only, never a password)
+  - com.example.ict361_lab.network.dto         (new package)
+      StudentDto, StudentsPageDto, AuthDtos, StudentMutationDtos, GroupDtos, ApiError
+      — these mirror the backend's JSON exactly; see field-by-field comments in each file.
+  - com.example.ict361_lab.repository
+      StudentRepository.java     EXTENDED: now covers auth, CRUD, group-transfer,
+                                  correction-request, groups — not just 2 read methods.
+      RemoteStudentRepository.java  NEW: real implementation, calls the backend.
+      FakeStudentRepository.java    REWRITTEN: now implements the full interface with
+                                     in-memory mock data (including a mock 15-cap check),
+                                     so screens can be built and demoed with no backend running.
+  - com.example.ict361_lab.viewmodel
+      StudentViewModel.java         EXTENDED with one method per repository operation.
+      StudentViewModelFactory.java  NEW — StudentViewModel now takes a constructor arg,
+                                     so it needs a factory. Two entry points:
+                                       StudentViewModelFactory.forRemote(context)   -> real backend
+                                       StudentViewModelFactory.with(new FakeStudentRepository()) -> mock
+  - model: Student.java EXTENDED (student_number, program_code, group_code, status,
+    version — the old 2-arg constructor still exists so nothing else breaks), plus two
+    new small models: GroupInfo.java and AuthResult.java.
+  - AndroidManifest.xml: added INTERNET permission and a network_security_config.xml
+    scoped ONLY to 10.0.2.2/localhost (cleartext HTTP for local dev). The lab requires
+    HTTPS for a real deployed backend — see the comment in that xml file for what to
+    delete once you point at a real server.
+  - FirstFragment / fragment_first.xml: added ONE temporary "Check backend connection"
+    button that calls GET /api/groups and shows the live group counts. This is scaffolding
+    to prove the wiring works end-to-end — delete it once real screens exist. It is NOT
+    meant to be one of your real screens.
+
+How this was verified: the Node backend was actually run against a live MySQL-compatible
+database (20/20 passes on the concurrency test, plus a full curl walkthrough of auth, RBAC,
+CRUD, search/filter, soft delete, idempotency). The Android side can't be compiled with a
+real Gradle/Android-SDK build in this environment (no internet access to Google's Maven),
+so instead: (1) the whole source tree was checked with `javac` for genuine syntax errors —
+none found; (2) every non-UI class (model/network/repository/viewmodel — 19 files) was
+compiled clean against hand-written stubs that match Retrofit/OkHttp/Gson/androidx's real
+method signatures; (3) a runtime harness actually exercised FakeStudentRepository and
+RemoteStudentRepository's real mapping/error-handling logic (43/43 checks passed, including
+real JSON parsing of backend-shaped payloads). This is strong evidence the code is correct,
+but it is NOT a substitute for opening the project in Android Studio and doing a real Gradle
+sync/build — do that before you build UI on top of it, in case something Android-SDK-specific
+(a resource id, a manifest merge conflict) turns up that a non-Android compile can't catch.
+
+--------------------------------------------------------------------
+1. HOW TO RUN IT
+--------------------------------------------------------------------
+1. Start the backend (see backend/README.md): `npm install && npm start` with a MySQL
+   database loaded from backend/sql/schema.sql (+ seed.sql for a demo lecturer account).
+2. Open this Android project in Android Studio, let Gradle sync (it will now pull
+   Retrofit/OkHttp/Gson — check app/build.gradle.kts and gradle/libs.versions.toml).
+3. Run on an EMULATOR — ApiClient.BASE_URL defaults to "http://10.0.2.2:3000/", which is
+   the emulator's alias for your host machine's localhost. On a PHYSICAL device, change
+   BASE_URL to your computer's LAN IP (e.g. "http://192.168.1.23:3000/") and add that IP
+   to res/xml/network_security_config.xml, or the app can't reach it.
+4. Tap "Check backend connection" on the first screen — it should show something like
+   "Connected. Groups: G01: 0/15 ..." if the backend is reachable, or a "Could not reach
+   backend" message if not (check BASE_URL, check the backend is actually running).
+
+--------------------------------------------------------------------
+2. FOR THE UI/UX TEAM
+--------------------------------------------------------------------
+You don't need to touch network/ or repository/ at all. Build fragments/activities as
+normal, get a StudentViewModel like this:
+
+    StudentViewModel vm = new ViewModelProvider(this,
+        StudentViewModelFactory.forRemote(requireContext()))
+        .get(StudentViewModel.class);
+
+    // or, to build/demo a screen with no backend running:
+    StudentViewModel vm = new ViewModelProvider(this,
+        StudentViewModelFactory.with(new FakeStudentRepository()))
+        .get(StudentViewModel.class);
+
+Every method returns LiveData<Resource<T>>. Resource has a `status` (LOADING / SUCCESS /
+ERROR), `data`, and `message` — observe it and switch on status the same way the temporary
+demo in FirstFragment.java does (renderGroupsResult() is a worked example to copy the shape
+of, then delete once you don't need it).
+
+Screen-by-screen, the methods you'll want:
+
+  Sign-in screen
+    vm.login(username, password) -> AuthResult{accountId, studentId, role, token}
+    On SUCCESS the token is already saved (RemoteStudentRepository does this via
+    TokenStore) — you don't need to store anything yourself, just navigate onward based
+    on `role` ("student" vs "lecturer").
+
+  Registration screen
+    vm.register(claimCode, studentName, studentNumber, programCode, username, password)
+    programCode must be one of "CS" | "IT" | "DS" (use a spinner/dropdown, not free text —
+    the server rejects anything else). Surface the exact ERROR message on validation
+    failures (e.g. "student_number must be exactly 9 digits") — it's already
+    human-readable, generated server-side.
+
+  Student profile / group screen
+    vm.getMyProfile() -> Student, which includes group occupancy info when available
+    (see StudentDto.GroupOccupancyDto if you need it as a separate call — getStudentById
+    exists too, but students can only fetch their OWN id; the server enforces this,
+    calling it with someone else's id returns a 403).
+
+  Lecturer roster screen
+    vm.getStudents(search, programCode, groupCode, page, pageSize)
+    groupCode accepts "G01".."G04" OR the literal string "UNASSIGNED" for the
+    Unassigned filter the lab spec asks for. Pass null for any filter you don't want
+    applied. This is paginated — total count comes back in the StudentsPageDto if you
+    call the repository/DTO layer directly, but the ViewModel currently only returns
+    the mapped List<Student>; ask the architecture team if you need total/page in the
+    UI layer too and we can add it to the Resource payload.
+
+  Student editor (lecturer) / self-edit (student)
+    vm.updateStudent(studentId, studentName, programCode, expectedVersion)
+    Pass null for a field you're not changing. ALWAYS pass the version you last read
+    from the server as expectedVersion — a 409 VERSION_CONFLICT means someone else
+    edited the record first; re-fetch and show the current server state rather than
+    just retrying (this matters more once the sync team's offline queue exists, but
+    the check is live now).
+    Students cannot set programCode... wait, they CAN set studentName/programCode, just
+    not studentNumber or groupCode — the server enforces this regardless of what the
+    app sends, so hiding those fields in the student's own editor is a UX nicety, not
+    the security boundary.
+
+  Group transfer / assignment
+    vm.transferGroup(studentId, groupCode, expectedVersion)
+    groupCode "UNASSIGNED" removes them from a group. A 409 GROUP_FULL means exactly
+    what it says — the lab spec wants this shown to the user with the previous group
+    retained, which the server already guarantees; you just need to surface the message.
+
+  Lecturer delete (with confirmation)
+    vm.deleteStudent(studentId) — show a confirmation dialog before calling this,
+    per the lab's "confirm before deleting, allow cancellation" requirement. The
+    call itself is a soft delete server-side.
+
+  Student number correction request
+    vm.requestNumberCorrection(studentId, requestedNumber) — students can't edit
+    their own number directly; this raises a request a lecturer actions elsewhere
+    (there's no lecturer-side screen for approving these yet — GET
+    /api/groups/pending-corrections and POST /api/groups/corrections/:id/resolve
+    exist on the backend and are NOT yet wired into ApiService/repository, since no
+    screen needs them yet. Ask the backend team to add them when you're ready to
+    build that screen, it's a small addition following the same pattern.)
+
+  Sync/error states
+    Every Resource.ERROR carries a message straight from the server (or "Can't reach
+    the server..." for a genuine network failure) — safe to show directly in a Snackbar
+    or inline error text. There's no offline/pending state yet; that's the sync team's
+    piece (next section) — build your loading/empty/error states now, and the same
+    Resource shape will grow a PENDING-style state later without changing your
+    observer code, as long as you're switching on `status` rather than assuming only
+    two outcomes.
+
+--------------------------------------------------------------------
+3. FOR THE LOCAL STORAGE / SYNC TEAM
+--------------------------------------------------------------------
+Nothing here is Room- or WorkManager-aware yet — RemoteStudentRepository is a thin,
+always-online client. Please do NOT bolt caching onto RemoteStudentRepository directly.
+Instead:
+
+  1. Add Room entities that mirror the fields on network.dto.StudentDto (student_id as
+     the primary key, student_number, student_name, program_code, group_code, status,
+     version, plus your own local-only columns: sync_state, pending_operation_id, etc.).
+     Keep them as Room @Entity classes separate from both StudentDto (wire shape) and
+     model.Student (UI-facing domain shape) — three layers, two mapping boundaries, so a
+     schema migration doesn't ripple into the UI and a backend field rename doesn't
+     ripple into Room.
+
+  2. Write a new class, e.g. OfflineFirstStudentRepository, that implements
+     StudentRepository (the SAME interface RemoteStudentRepository and
+     FakeStudentRepository implement). Internally it composes:
+       - a Room DAO for local reads and the pending-operations queue,
+       - RemoteStudentRepository (or ApiService directly) for the actual network calls,
+       - WorkManager for background sync with connectivity constraints/retry backoff.
+     Because it implements the same interface, StudentViewModelFactory just needs a
+     third entry point (e.g. StudentViewModelFactory.forOfflineFirst(context)) and NO
+     fragment/screen code has to change.
+
+  3. Idempotency is already wired for you: every mutating ApiService method
+     (createStudent, updateStudent, transferGroup, deleteStudent) takes an operationId
+     parameter that becomes the "X-Operation-Id" header, and the backend's
+     operation_receipts table replays the stored response for a repeated id with the
+     same body, or rejects a repeated id with a different body (see
+     backend/src/utils/idempotency.js). StudentViewModel currently generates a fresh
+     UUID per call — that's correct for "user tapped Save": a fresh action, fresh id.
+     For YOUR retry path (WorkManager retrying a QUEUED offline mutation), reuse the
+     SAME operationId every time you retry that same queued row — store it alongside
+     the queued operation in Room, don't regenerate it on each retry attempt. That's
+     the whole mechanism the lab's "operation receipt" requirement is asking for.
+
+  4. Conflict detection is already wired for you too: every Student carries a `version`
+     int, and updateStudent/transferGroup both accept an expectedVersion parameter that
+     the server checks with a real row lock (see groupAssignment.js and the PUT handler
+     in student.routes.js) before applying the change, returning 409 VERSION_CONFLICT
+     on a mismatch. When you build the offline queue, store the base version each
+     pending edit was made against, send it as expectedVersion on sync, and on conflict
+     follow the lab's rule: keep the local proposal, show the current server record, do
+     NOT silently overwrite either side.
+
+  5. For "pull authorised updates and deletion markers": the backend already appends to
+     a sync_events table on every create/update/group-change/delete (see the schema and
+     the INSERT INTO sync_events calls throughout student.routes.js and
+     groupAssignment.js), but there is currently NO GET endpoint exposing that feed —
+     add one (something like GET /api/sync/events?since=<event_id>) when you're ready
+     to build the pull side, following the same auth/role pattern as the other routes.
+     Flag this to the backend team; it's a natural, small addition to the existing table.
+
+  6. Don't store the JWT or any password beyond what TokenStore already does (token
+     only). If you need the token available to a WorkManager Worker for background
+     sync calls, read it via the same TokenStore(context) — don't duplicate it into
+     Room or pass it through WorkManager's Data payload (that ends up in the system's
+     WorkManager database, unencrypted).
+
+  7. TokenStore is currently plain SharedPreferences, which is adequate for the demo
+     but not encrypted at rest. If your team owns session/security hardening as part of
+     "local storage", consider swapping it for androidx.security:security-crypto's
+     EncryptedSharedPreferences — it's a drop-in replacement for the same get/put API.
+
+--------------------------------------------------------------------
+4. KNOWN GAPS / NOT YET DONE (so nobody assumes they're covered)
+--------------------------------------------------------------------
+  - No Room, no WorkManager, no offline queue — see section 3.
+  - No lecturer screen for approving correction requests (backend routes exist, not
+    wired into ApiService yet — small addition when needed).
+  - No sync/pull endpoint yet (sync_events table exists, no GET route reads it yet).
+  - TokenStore is unencrypted SharedPreferences (see 3.7).
+  - No logout token revocation — the server can't invalidate a JWT early; logout just
+    clears the local token. If that's a problem for the "clear or lock account data on
+    logout" requirement, consider shorter token expiry + refresh, or a server-side
+    revocation list — worth a team discussion before the final submission.
+  - StudentsPageDto's `total`/`page` fields aren't surfaced through the ViewModel yet
+    (only the mapped list is) — trivial to add if the roster screen needs pagination UI.
+  - This was verified by compiling against hand-written library stubs and a runtime
+    harness, NOT a real Android Studio Gradle build (no internet access to Google's
+    Maven from where this was written) — do a real Gradle sync before you build on it,
+    per the note in section 0.
