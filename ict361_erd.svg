@@ -1,0 +1,382 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2000" height="1190" viewBox="0 0 2000 1190" font-family="DejaVu Sans, Arial, sans-serif">
+<rect width="2000" height="1190" fill="#ffffff"/>
+<text x="1000.0" y="36" text-anchor="middle" font-size="26" font-weight="bold" fill="#0f172a">ICT361 - ERD (Student Group Management System) - ict361_db</text>
+<polyline points="470,215 530,215" fill="none" stroke="#1e293b" stroke-width="2"/>
+<text x="474" y="207" text-anchor="start" font-size="13" fill="#0f172a" font-weight="bold">1</text>
+<text x="526" y="207" text-anchor="end" font-size="13" fill="#0f172a" font-weight="bold">N</text>
+<polyline points="970,200 1030,200" fill="none" stroke="#1e293b" stroke-width="2"/>
+<text x="1026" y="192" text-anchor="end" font-size="13" fill="#0f172a" font-weight="bold">1</text>
+<text x="974" y="192" text-anchor="start" font-size="13" fill="#0f172a" font-weight="bold">N</text>
+<polyline points="600,286 600,345 250,345 250,450" fill="none" stroke="#1e293b" stroke-width="2"/>
+<text x="606" y="304" text-anchor="start" font-size="13" fill="#0f172a" font-weight="bold">1</text>
+<text x="256" y="440" text-anchor="start" font-size="13" fill="#0f172a" font-weight="bold">0..1</text>
+<polyline points="880,286 880,345 1130,345 1130,450" fill="none" stroke="#1e293b" stroke-width="2"/>
+<text x="886" y="304" text-anchor="start" font-size="13" fill="#0f172a" font-weight="bold">1</text>
+<text x="1136" y="440" text-anchor="start" font-size="13" fill="#0f172a" font-weight="bold">N</text>
+<polyline points="1300,234 1300,450" fill="none" stroke="#1e293b" stroke-width="2"/>
+<text x="1306" y="252" text-anchor="start" font-size="13" fill="#0f172a" font-weight="bold">1</text>
+<text x="1306" y="440" text-anchor="start" font-size="13" fill="#0f172a" font-weight="bold">N</text>
+<polyline points="130,698 130,840" fill="none" stroke="#1e293b" stroke-width="2"/>
+<text x="136" y="716" text-anchor="start" font-size="13" fill="#0f172a" font-weight="bold">1</text>
+<text x="136" y="830" text-anchor="start" font-size="13" fill="#0f172a" font-weight="bold">N</text>
+<polyline points="530,255 500,255 500,790 350,790 350,840" fill="none" stroke="#1e293b" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="524" y="247" text-anchor="end" font-size="13" fill="#0f172a" font-weight="bold">1</text>
+<text x="356" y="830" text-anchor="start" font-size="13" fill="#0f172a" font-weight="bold">N</text>
+<polyline points="470,900 530,900" fill="none" stroke="#1e293b" stroke-width="2"/>
+<text x="474" y="892" text-anchor="start" font-size="13" fill="#0f172a" font-weight="bold">1</text>
+<text x="526" y="892" text-anchor="end" font-size="12" fill="#0f172a" font-weight="bold">0..1</text>
+<polyline points="250,90 250,62 1750,62 1750,90" fill="none" stroke="#1e293b" stroke-width="2"/>
+<text x="256" y="82" text-anchor="start" font-size="13" fill="#0f172a" font-weight="bold">1</text>
+<text x="1756" y="82" text-anchor="start" font-size="13" fill="#0f172a" font-weight="bold">0..N</text>
+<polyline points="1470,150 1530,150" fill="none" stroke="#1e293b" stroke-width="2"/>
+<text x="1474" y="142" text-anchor="start" font-size="13" fill="#0f172a" font-weight="bold">1</text>
+<text x="1526" y="142" text-anchor="end" font-size="13" fill="#0f172a" font-weight="bold">N</text>
+<polyline points="740,450 740,286" fill="none" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="748" y="380" text-anchor="start" font-size="11" fill="#475569">matched by student_number</text>
+<text x="748" y="394" text-anchor="start" font-size="11" fill="#475569">(no FK)</text>
+<rect x="30" y="90" width="440" height="144" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="2.5"/>
+<path d="M30,124 V98 a8,8 0 0 1 8,-8 H462 a8,8 0 0 1 8,8 V124 Z" fill="#dbeafe"/>
+<line x1="30" y1="124" x2="470" y2="124" stroke="#2563eb" stroke-width="1.5"/>
+<text x="250.0" y="113" text-anchor="middle" font-size="16" font-weight="bold" fill="#0f172a">PROGRAMMES</text>
+<rect x="40" y="129.0" width="23" height="16" rx="4" fill="#2563eb"/>
+<text x="51.5" y="141.0" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#ffffff">PK</text>
+<text x="94" y="141.5" font-size="12.5" font-weight="bold" fill="#0f172a">programme_id</text>
+<text x="220" y="141.0" font-size="11.5" fill="#334155">BIGINT</text>
+<text x="320" y="141.0" font-size="10.5" fill="#64748b">AI</text>
+<rect x="40" y="155.0" width="23" height="16" rx="4" fill="#f59e0b"/>
+<text x="51.5" y="167.0" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#ffffff">UK</text>
+<text x="94" y="167.5" font-size="12.5" fill="#0f172a">programme_code</text>
+<text x="220" y="167.0" font-size="11.5" fill="#334155">VARCHAR(10)</text>
+<text x="320" y="167.0" font-size="10.5" fill="#64748b">UNIQUE</text>
+<text x="94" y="193.5" font-size="12.5" fill="#0f172a">programme_name</text>
+<text x="220" y="193.0" font-size="11.5" fill="#334155">VARCHAR(100)</text>
+<text x="320" y="193.0" font-size="10.5" fill="#64748b">NOT NULL</text>
+<text x="94" y="219.0" font-size="10.5" font-style="italic" fill="#64748b">created_at, updated_at, is_deleted, deleted_at, version</text>
+<rect x="530" y="90" width="440" height="196" rx="8" fill="#ffffff" stroke="#7c3aed" stroke-width="2.5"/>
+<path d="M530,124 V98 a8,8 0 0 1 8,-8 H962 a8,8 0 0 1 8,8 V124 Z" fill="#ede9fe"/>
+<line x1="530" y1="124" x2="970" y2="124" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="750.0" y="113" text-anchor="middle" font-size="16" font-weight="bold" fill="#0f172a">STUDENTS</text>
+<rect x="540" y="129.0" width="23" height="16" rx="4" fill="#2563eb"/>
+<text x="551.5" y="141.0" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#ffffff">PK</text>
+<text x="594" y="141.5" font-size="12.5" font-weight="bold" fill="#0f172a">student_id</text>
+<text x="720" y="141.0" font-size="11.5" fill="#334155">BIGINT</text>
+<text x="820" y="141.0" font-size="10.5" fill="#64748b">AI (immutable)</text>
+<rect x="540" y="155.0" width="23" height="16" rx="4" fill="#f59e0b"/>
+<text x="551.5" y="167.0" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#ffffff">UK</text>
+<text x="594" y="167.5" font-size="12.5" fill="#0f172a">student_number</text>
+<text x="720" y="167.0" font-size="11.5" fill="#334155">VARCHAR(9)</text>
+<text x="820" y="167.0" font-size="10.5" fill="#64748b">UNIQUE, 9 digits</text>
+<text x="594" y="193.5" font-size="12.5" fill="#0f172a">student_name</text>
+<text x="720" y="193.0" font-size="11.5" fill="#334155">VARCHAR(100)</text>
+<text x="820" y="193.0" font-size="10.5" fill="#64748b">NOT NULL, 2-100</text>
+<rect x="540" y="207.0" width="23" height="16" rx="4" fill="#16a34a"/>
+<text x="551.5" y="219.0" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#ffffff">FK</text>
+<text x="594" y="219.5" font-size="12.5" fill="#0f172a">programme_id</text>
+<text x="720" y="219.0" font-size="11.5" fill="#334155">BIGINT</text>
+<text x="820" y="219.0" font-size="10.5" fill="#64748b">NOT NULL</text>
+<rect x="540" y="233.0" width="23" height="16" rx="4" fill="#16a34a"/>
+<text x="551.5" y="245.0" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#ffffff">FK</text>
+<text x="594" y="245.5" font-size="12.5" fill="#0f172a">group_id</text>
+<text x="720" y="245.0" font-size="11.5" fill="#334155">BIGINT</text>
+<text x="820" y="245.0" font-size="10.5" fill="#64748b">NULL = Unassigned</text>
+<text x="594" y="271.0" font-size="10.5" font-style="italic" fill="#64748b">created_at, updated_at, is_deleted, deleted_at, version</text>
+<rect x="1030" y="90" width="440" height="144" rx="8" fill="#ffffff" stroke="#16a34a" stroke-width="2.5"/>
+<path d="M1030,124 V98 a8,8 0 0 1 8,-8 H1462 a8,8 0 0 1 8,8 V124 Z" fill="#dcfce7"/>
+<line x1="1030" y1="124" x2="1470" y2="124" stroke="#16a34a" stroke-width="1.5"/>
+<text x="1250.0" y="113" text-anchor="middle" font-size="16" font-weight="bold" fill="#0f172a">GROUPS</text>
+<rect x="1040" y="129.0" width="23" height="16" rx="4" fill="#2563eb"/>
+<text x="1051.5" y="141.0" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#ffffff">PK</text>
+<text x="1094" y="141.5" font-size="12.5" font-weight="bold" fill="#0f172a">group_id</text>
+<text x="1220" y="141.0" font-size="11.5" fill="#334155">BIGINT</text>
+<text x="1320" y="141.0" font-size="10.5" fill="#64748b">AI</text>
+<rect x="1040" y="155.0" width="23" height="16" rx="4" fill="#f59e0b"/>
+<text x="1051.5" y="167.0" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#ffffff">UK</text>
+<text x="1094" y="167.5" font-size="12.5" fill="#0f172a">group_code</text>
+<text x="1220" y="167.0" font-size="11.5" fill="#334155">VARCHAR(10)</text>
+<text x="1320" y="167.0" font-size="10.5" fill="#64748b">UNIQUE (G01-G04)</text>
+<text x="1094" y="193.5" font-size="12.5" fill="#0f172a">capacity</text>
+<text x="1220" y="193.0" font-size="11.5" fill="#334155">INT</text>
+<text x="1320" y="193.0" font-size="10.5" fill="#64748b">CHECK 1-15</text>
+<text x="1094" y="219.0" font-size="10.5" font-style="italic" fill="#64748b">created_at, updated_at, is_deleted, deleted_at, version</text>
+<rect x="1530" y="90" width="440" height="326" rx="8" fill="#ffffff" stroke="#d97706" stroke-width="2.5"/>
+<path d="M1530,124 V98 a8,8 0 0 1 8,-8 H1962 a8,8 0 0 1 8,8 V124 Z" fill="#fef3c7"/>
+<line x1="1530" y1="124" x2="1970" y2="124" stroke="#d97706" stroke-width="1.5"/>
+<text x="1750.0" y="113" text-anchor="middle" font-size="16" font-weight="bold" fill="#0f172a">TIMETABLE_SLOTS</text>
+<rect x="1540" y="129.0" width="23" height="16" rx="4" fill="#2563eb"/>
+<text x="1551.5" y="141.0" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#ffffff">PK</text>
+<text x="1594" y="141.5" font-size="12.5" font-weight="bold" fill="#0f172a">slot_id</text>
+<text x="1720" y="141.0" font-size="11.5" fill="#334155">BIGINT</text>
+<text x="1820" y="141.0" font-size="10.5" fill="#64748b">AI</text>
+<text x="1594" y="167.5" font-size="12.5" fill="#0f172a">course_code</text>
+<text x="1720" y="167.0" font-size="11.5" fill="#334155">VARCHAR(10)</text>
+<text x="1820" y="167.0" font-size="10.5" fill="#64748b">NOT NULL</text>
+<text x="1594" y="193.5" font-size="12.5" fill="#0f172a">course_name</text>
+<text x="1720" y="193.0" font-size="11.5" fill="#334155">VARCHAR(100)</text>
+<text x="1820" y="193.0" font-size="10.5" fill="#64748b">NOT NULL</text>
+<text x="1594" y="219.5" font-size="12.5" fill="#0f172a">slot_type</text>
+<text x="1720" y="219.0" font-size="11.5" fill="#334155">ENUM</text>
+<text x="1820" y="219.0" font-size="10.5" fill="#64748b">LECTURE|LAB</text>
+<text x="1594" y="245.5" font-size="12.5" fill="#0f172a">day_of_week</text>
+<text x="1720" y="245.0" font-size="11.5" fill="#334155">TINYINT</text>
+<text x="1820" y="245.0" font-size="10.5" fill="#64748b">CHECK 1-7</text>
+<text x="1594" y="271.5" font-size="12.5" fill="#0f172a">start_time</text>
+<text x="1720" y="271.0" font-size="11.5" fill="#334155">TIME</text>
+<text x="1820" y="271.0" font-size="10.5" fill="#64748b">NOT NULL</text>
+<text x="1594" y="297.5" font-size="12.5" fill="#0f172a">end_time</text>
+<text x="1720" y="297.0" font-size="11.5" fill="#334155">TIME</text>
+<text x="1820" y="297.0" font-size="10.5" fill="#64748b">CHECK &gt; start</text>
+<text x="1594" y="323.5" font-size="12.5" fill="#0f172a">venue</text>
+<text x="1720" y="323.0" font-size="11.5" fill="#334155">VARCHAR(50)</text>
+<text x="1820" y="323.0" font-size="10.5" fill="#64748b">NOT NULL</text>
+<rect x="1540" y="337.0" width="23" height="16" rx="4" fill="#16a34a"/>
+<text x="1551.5" y="349.0" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#ffffff">FK</text>
+<text x="1594" y="349.5" font-size="12.5" fill="#0f172a">programme_id</text>
+<text x="1720" y="349.0" font-size="11.5" fill="#334155">BIGINT</text>
+<text x="1820" y="349.0" font-size="10.5" fill="#64748b">NULL = all</text>
+<rect x="1540" y="363.0" width="23" height="16" rx="4" fill="#16a34a"/>
+<text x="1551.5" y="375.0" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#ffffff">FK</text>
+<text x="1594" y="375.5" font-size="12.5" fill="#0f172a">group_id</text>
+<text x="1720" y="375.0" font-size="11.5" fill="#334155">BIGINT</text>
+<text x="1820" y="375.0" font-size="10.5" fill="#64748b">NULL, set for labs</text>
+<text x="1594" y="401.0" font-size="10.5" font-style="italic" fill="#64748b">created_at, updated_at, is_deleted, deleted_at, version</text>
+<rect x="30" y="450" width="440" height="248" rx="8" fill="#ffffff" stroke="#0d9488" stroke-width="2.5"/>
+<path d="M30,484 V458 a8,8 0 0 1 8,-8 H462 a8,8 0 0 1 8,8 V484 Z" fill="#ccfbf1"/>
+<line x1="30" y1="484" x2="470" y2="484" stroke="#0d9488" stroke-width="1.5"/>
+<text x="250.0" y="473" text-anchor="middle" font-size="16" font-weight="bold" fill="#0f172a">ACCOUNTS</text>
+<rect x="40" y="489.0" width="23" height="16" rx="4" fill="#2563eb"/>
+<text x="51.5" y="501.0" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#ffffff">PK</text>
+<text x="94" y="501.5" font-size="12.5" font-weight="bold" fill="#0f172a">account_id</text>
+<text x="220" y="501.0" font-size="11.5" fill="#334155">BIGINT</text>
+<text x="320" y="501.0" font-size="10.5" fill="#64748b">AI</text>
+<rect x="40" y="515.0" width="23" height="16" rx="4" fill="#f59e0b"/>
+<text x="51.5" y="527.0" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#ffffff">UK</text>
+<text x="94" y="527.5" font-size="12.5" fill="#0f172a">username</text>
+<text x="220" y="527.0" font-size="11.5" fill="#334155">VARCHAR(50)</text>
+<text x="320" y="527.0" font-size="10.5" fill="#64748b">UNIQUE</text>
+<text x="94" y="553.5" font-size="12.5" fill="#0f172a">password_hash</text>
+<text x="220" y="553.0" font-size="11.5" fill="#334155">VARCHAR(255)</text>
+<text x="320" y="553.0" font-size="10.5" fill="#64748b">NOT NULL</text>
+<text x="94" y="579.5" font-size="12.5" fill="#0f172a">role</text>
+<text x="220" y="579.0" font-size="11.5" fill="#334155">ENUM</text>
+<text x="320" y="579.0" font-size="10.5" fill="#64748b">STUDENT|LECTURER</text>
+<rect x="40" y="593.0" width="23" height="16" rx="4" fill="#16a34a"/>
+<text x="51.5" y="605.0" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#ffffff">FK</text>
+<rect x="66" y="593.0" width="23" height="16" rx="4" fill="#f59e0b"/>
+<text x="77.5" y="605.0" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#ffffff">UK</text>
+<text x="94" y="605.5" font-size="12.5" fill="#0f172a">student_id</text>
+<text x="220" y="605.0" font-size="11.5" fill="#334155">BIGINT</text>
+<text x="320" y="605.0" font-size="10.5" fill="#64748b">NULL for lecturers</text>
+<text x="94" y="631.5" font-size="12.5" fill="#0f172a">is_active</text>
+<text x="220" y="631.0" font-size="11.5" fill="#334155">TINYINT(1)</text>
+<text x="320" y="631.0" font-size="10.5" fill="#64748b">DEFAULT 1</text>
+<text x="94" y="657.5" font-size="12.5" fill="#0f172a">is_verified</text>
+<text x="220" y="657.0" font-size="11.5" fill="#334155">TINYINT(1)</text>
+<text x="320" y="657.0" font-size="10.5" fill="#64748b">DEFAULT 0</text>
+<text x="94" y="683.0" font-size="10.5" font-style="italic" fill="#64748b">created_at, updated_at, is_deleted, deleted_at, version</text>
+<rect x="530" y="450" width="440" height="170" rx="8" fill="#ffffff" stroke="#64748b" stroke-width="2.5"/>
+<path d="M530,484 V458 a8,8 0 0 1 8,-8 H962 a8,8 0 0 1 8,8 V484 Z" fill="#e2e8f0"/>
+<line x1="530" y1="484" x2="970" y2="484" stroke="#64748b" stroke-width="1.5"/>
+<text x="750.0" y="473" text-anchor="middle" font-size="16" font-weight="bold" fill="#0f172a">CLAIM_CODES</text>
+<rect x="540" y="489.0" width="23" height="16" rx="4" fill="#2563eb"/>
+<text x="551.5" y="501.0" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#ffffff">PK</text>
+<text x="594" y="501.5" font-size="12.5" font-weight="bold" fill="#0f172a">claim_id</text>
+<text x="720" y="501.0" font-size="11.5" fill="#334155">BIGINT</text>
+<text x="820" y="501.0" font-size="10.5" fill="#64748b">AI</text>
+<rect x="540" y="515.0" width="23" height="16" rx="4" fill="#f59e0b"/>
+<text x="551.5" y="527.0" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#ffffff">UK</text>
+<text x="594" y="527.5" font-size="12.5" fill="#0f172a">student_number</text>
+<text x="720" y="527.0" font-size="11.5" fill="#334155">VARCHAR(9)</text>
+<text x="820" y="527.0" font-size="10.5" fill="#64748b">UNIQUE, 9 digits</text>
+<text x="594" y="553.5" font-size="12.5" fill="#0f172a">code_hash</text>
+<text x="720" y="553.0" font-size="11.5" fill="#334155">VARCHAR(255)</text>
+<text x="820" y="553.0" font-size="10.5" fill="#64748b">NOT NULL</text>
+<text x="594" y="579.5" font-size="12.5" fill="#0f172a">used_at</text>
+<text x="720" y="579.0" font-size="11.5" fill="#334155">TIMESTAMP</text>
+<text x="820" y="579.0" font-size="10.5" fill="#64748b">NULL</text>
+<text x="594" y="605.5" font-size="12.5" fill="#0f172a">created_at</text>
+<text x="720" y="605.0" font-size="11.5" fill="#334155">TIMESTAMP</text>
+<text x="820" y="605.0" font-size="10.5" fill="#64748b">NOT NULL</text>
+<rect x="1030" y="450" width="440" height="352" rx="8" fill="#ffffff" stroke="#0891b2" stroke-width="2.5"/>
+<path d="M1030,484 V458 a8,8 0 0 1 8,-8 H1462 a8,8 0 0 1 8,8 V484 Z" fill="#cffafe"/>
+<line x1="1030" y1="484" x2="1470" y2="484" stroke="#0891b2" stroke-width="1.5"/>
+<text x="1250.0" y="473" text-anchor="middle" font-size="16" font-weight="bold" fill="#0f172a">GROUP_REQUESTS</text>
+<rect x="1040" y="489.0" width="23" height="16" rx="4" fill="#2563eb"/>
+<text x="1051.5" y="501.0" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#ffffff">PK</text>
+<text x="1094" y="501.5" font-size="12.5" font-weight="bold" fill="#0f172a">request_id</text>
+<text x="1220" y="501.0" font-size="11.5" fill="#334155">BIGINT</text>
+<text x="1320" y="501.0" font-size="10.5" fill="#64748b">AI</text>
+<rect x="1040" y="515.0" width="23" height="16" rx="4" fill="#16a34a"/>
+<text x="1051.5" y="527.0" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#ffffff">FK</text>
+<text x="1094" y="527.5" font-size="12.5" fill="#0f172a">student_id</text>
+<text x="1220" y="527.0" font-size="11.5" fill="#334155">BIGINT</text>
+<text x="1320" y="527.0" font-size="10.5" fill="#64748b">NOT NULL</text>
+<text x="1094" y="553.5" font-size="12.5" fill="#0f172a">request_type</text>
+<text x="1220" y="553.0" font-size="11.5" fill="#334155">ENUM</text>
+<text x="1320" y="553.0" font-size="10.5" fill="#64748b">see notes</text>
+<rect x="1040" y="567.0" width="23" height="16" rx="4" fill="#16a34a"/>
+<text x="1051.5" y="579.0" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#ffffff">FK</text>
+<text x="1094" y="579.5" font-size="12.5" fill="#0f172a">from_group_id</text>
+<text x="1220" y="579.0" font-size="11.5" fill="#334155">BIGINT</text>
+<text x="1320" y="579.0" font-size="10.5" fill="#64748b">NULL</text>
+<rect x="1040" y="593.0" width="23" height="16" rx="4" fill="#16a34a"/>
+<text x="1051.5" y="605.0" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#ffffff">FK</text>
+<text x="1094" y="605.5" font-size="12.5" fill="#0f172a">target_group_id</text>
+<text x="1220" y="605.0" font-size="11.5" fill="#334155">BIGINT</text>
+<text x="1320" y="605.0" font-size="10.5" fill="#64748b">NULL</text>
+<text x="1094" y="631.5" font-size="12.5" fill="#0f172a">requested_value</text>
+<text x="1220" y="631.0" font-size="11.5" fill="#334155">VARCHAR(100)</text>
+<text x="1320" y="631.0" font-size="10.5" fill="#64748b">NULL</text>
+<text x="1094" y="657.5" font-size="12.5" fill="#0f172a">status</text>
+<text x="1220" y="657.0" font-size="11.5" fill="#334155">ENUM</text>
+<text x="1320" y="657.0" font-size="9.5" fill="#64748b">PENDING|APPROVED|REJECTED</text>
+<text x="1094" y="683.5" font-size="12.5" fill="#0f172a">reason</text>
+<text x="1220" y="683.0" font-size="11.5" fill="#334155">TEXT</text>
+<text x="1320" y="683.0" font-size="10.5" fill="#64748b">NULL</text>
+<rect x="1040" y="697.0" width="23" height="16" rx="4" fill="#16a34a"/>
+<text x="1051.5" y="709.0" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#ffffff">FK</text>
+<text x="1094" y="709.5" font-size="12.5" fill="#0f172a">resolved_by</text>
+<text x="1220" y="709.0" font-size="11.5" fill="#334155">BIGINT</text>
+<text x="1320" y="709.0" font-size="9.5" fill="#64748b">NULL (lecturer account)</text>
+<text x="1094" y="735.5" font-size="12.5" fill="#0f172a">requested_at</text>
+<text x="1220" y="735.0" font-size="11.5" fill="#334155">TIMESTAMP</text>
+<text x="1320" y="735.0" font-size="10.5" fill="#64748b">NOT NULL</text>
+<text x="1094" y="761.5" font-size="12.5" fill="#0f172a">resolved_at</text>
+<text x="1220" y="761.0" font-size="11.5" fill="#334155">TIMESTAMP</text>
+<text x="1320" y="761.0" font-size="10.5" fill="#64748b">NULL</text>
+<text x="1094" y="787.0" font-size="10.5" font-style="italic" fill="#64748b">created_at, updated_at, is_deleted, deleted_at, version</text>
+<rect x="30" y="840" width="440" height="300" rx="8" fill="#ffffff" stroke="#db2777" stroke-width="2.5"/>
+<path d="M30,874 V848 a8,8 0 0 1 8,-8 H462 a8,8 0 0 1 8,8 V874 Z" fill="#fce7f3"/>
+<line x1="30" y1="874" x2="470" y2="874" stroke="#db2777" stroke-width="1.5"/>
+<text x="250.0" y="863" text-anchor="middle" font-size="16" font-weight="bold" fill="#0f172a">PENDING_OPERATIONS</text>
+<rect x="40" y="879.0" width="23" height="16" rx="4" fill="#2563eb"/>
+<text x="51.5" y="891.0" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#ffffff">PK</text>
+<text x="94" y="891.5" font-size="12.5" font-weight="bold" fill="#0f172a">operation_id</text>
+<text x="220" y="891.0" font-size="11.5" fill="#334155">BIGINT</text>
+<text x="320" y="891.0" font-size="10.5" fill="#64748b">AI</text>
+<rect x="40" y="905.0" width="23" height="16" rx="4" fill="#f59e0b"/>
+<text x="51.5" y="917.0" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#ffffff">UK</text>
+<text x="94" y="917.5" font-size="12.5" fill="#0f172a">operation_uuid</text>
+<text x="220" y="917.0" font-size="11.5" fill="#334155">CHAR(36)</text>
+<text x="320" y="917.0" font-size="10.5" fill="#64748b">UNIQUE (from phone)</text>
+<rect x="40" y="931.0" width="23" height="16" rx="4" fill="#16a34a"/>
+<text x="51.5" y="943.0" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#ffffff">FK</text>
+<text x="94" y="943.5" font-size="12.5" fill="#0f172a">account_id</text>
+<text x="220" y="943.0" font-size="11.5" fill="#334155">BIGINT</text>
+<text x="320" y="943.0" font-size="10.5" fill="#64748b">NOT NULL</text>
+<rect x="40" y="957.0" width="23" height="16" rx="4" fill="#16a34a"/>
+<text x="51.5" y="969.0" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#ffffff">FK</text>
+<text x="94" y="969.5" font-size="12.5" fill="#0f172a">student_id</text>
+<text x="220" y="969.0" font-size="11.5" fill="#334155">BIGINT</text>
+<text x="320" y="969.0" font-size="10.5" fill="#64748b">NULL (CREATE)</text>
+<text x="94" y="995.5" font-size="12.5" fill="#0f172a">operation_type</text>
+<text x="220" y="995.0" font-size="11.5" fill="#334155">ENUM</text>
+<text x="320" y="995.0" font-size="10.5" fill="#64748b">CREATE|UPDATE|DELETE</text>
+<text x="94" y="1021.5" font-size="12.5" fill="#0f172a">target_table</text>
+<text x="220" y="1021.0" font-size="11.5" fill="#334155">VARCHAR(50)</text>
+<text x="320" y="1021.0" font-size="10.5" fill="#64748b">NOT NULL</text>
+<text x="94" y="1047.5" font-size="12.5" fill="#0f172a">data_payload</text>
+<text x="220" y="1047.0" font-size="11.5" fill="#334155">JSON</text>
+<text x="320" y="1047.0" font-size="10.5" fill="#64748b">NOT NULL</text>
+<text x="94" y="1073.5" font-size="12.5" fill="#0f172a">base_version</text>
+<text x="220" y="1073.0" font-size="11.5" fill="#334155">INT</text>
+<text x="320" y="1073.0" font-size="10.5" fill="#64748b">NULL</text>
+<text x="94" y="1099.5" font-size="12.5" fill="#0f172a">status</text>
+<text x="220" y="1099.0" font-size="11.5" fill="#334155">ENUM</text>
+<text x="320" y="1099.0" font-size="10.5" fill="#64748b">see notes</text>
+<text x="94" y="1125.0" font-size="10.5" font-style="italic" fill="#64748b">created_at, updated_at, is_deleted, deleted_at, version</text>
+<rect x="530" y="840" width="440" height="222" rx="8" fill="#ffffff" stroke="#ca8a04" stroke-width="2.5"/>
+<path d="M530,874 V848 a8,8 0 0 1 8,-8 H962 a8,8 0 0 1 8,8 V874 Z" fill="#fef9c3"/>
+<line x1="530" y1="874" x2="970" y2="874" stroke="#ca8a04" stroke-width="1.5"/>
+<text x="750.0" y="863" text-anchor="middle" font-size="16" font-weight="bold" fill="#0f172a">OPERATION_RECEIPTS</text>
+<rect x="540" y="879.0" width="23" height="16" rx="4" fill="#2563eb"/>
+<text x="551.5" y="891.0" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#ffffff">PK</text>
+<text x="594" y="891.5" font-size="12.5" font-weight="bold" fill="#0f172a">receipt_id</text>
+<text x="720" y="891.0" font-size="11.5" fill="#334155">BIGINT</text>
+<text x="820" y="891.0" font-size="10.5" fill="#64748b">AI</text>
+<rect x="540" y="905.0" width="23" height="16" rx="4" fill="#16a34a"/>
+<text x="551.5" y="917.0" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#ffffff">FK</text>
+<rect x="566" y="905.0" width="23" height="16" rx="4" fill="#f59e0b"/>
+<text x="577.5" y="917.0" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#ffffff">UK</text>
+<text x="594" y="917.5" font-size="12.5" fill="#0f172a">operation_id</text>
+<text x="720" y="917.0" font-size="11.5" fill="#334155">BIGINT</text>
+<text x="820" y="917.0" font-size="10.5" fill="#64748b">UNIQUE</text>
+<text x="594" y="943.5" font-size="12.5" fill="#0f172a">receipt_code</text>
+<text x="720" y="943.0" font-size="11.5" fill="#334155">VARCHAR(50)</text>
+<text x="820" y="943.0" font-size="10.5" fill="#64748b">NOT NULL</text>
+<text x="594" y="969.5" font-size="12.5" fill="#0f172a">request_hash</text>
+<text x="720" y="969.0" font-size="11.5" fill="#334155">CHAR(64)</text>
+<text x="820" y="969.0" font-size="10.5" fill="#64748b">NOT NULL</text>
+<text x="594" y="995.5" font-size="12.5" fill="#0f172a">status</text>
+<text x="720" y="995.0" font-size="11.5" fill="#334155">ENUM</text>
+<text x="820" y="995.0" font-size="10.5" fill="#64748b">SUCCESS|FAILED</text>
+<text x="594" y="1021.5" font-size="12.5" fill="#0f172a">response_data</text>
+<text x="720" y="1021.0" font-size="11.5" fill="#334155">JSON</text>
+<text x="820" y="1021.0" font-size="10.5" fill="#64748b">NULL</text>
+<text x="594" y="1047.0" font-size="10.5" font-style="italic" fill="#64748b">created_at, updated_at, is_deleted, deleted_at, version</text>
+<rect x="1030" y="840" width="440" height="248" rx="8" fill="#ffffff" stroke="#65a30d" stroke-width="2.5"/>
+<path d="M1030,874 V848 a8,8 0 0 1 8,-8 H1462 a8,8 0 0 1 8,8 V874 Z" fill="#ecfccb"/>
+<line x1="1030" y1="874" x2="1470" y2="874" stroke="#65a30d" stroke-width="1.5"/>
+<text x="1250.0" y="863" text-anchor="middle" font-size="16" font-weight="bold" fill="#0f172a">FAQS</text>
+<rect x="1040" y="879.0" width="23" height="16" rx="4" fill="#2563eb"/>
+<text x="1051.5" y="891.0" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#ffffff">PK</text>
+<text x="1094" y="891.5" font-size="12.5" font-weight="bold" fill="#0f172a">faq_id</text>
+<text x="1220" y="891.0" font-size="11.5" fill="#334155">BIGINT</text>
+<text x="1320" y="891.0" font-size="10.5" fill="#64748b">AI</text>
+<text x="1094" y="917.5" font-size="12.5" fill="#0f172a">question</text>
+<text x="1220" y="917.0" font-size="11.5" fill="#334155">VARCHAR(255)</text>
+<text x="1320" y="917.0" font-size="10.5" fill="#64748b">NOT NULL</text>
+<text x="1094" y="943.5" font-size="12.5" fill="#0f172a">answer</text>
+<text x="1220" y="943.0" font-size="11.5" fill="#334155">TEXT</text>
+<text x="1320" y="943.0" font-size="10.5" fill="#64748b">NOT NULL</text>
+<text x="1094" y="969.5" font-size="12.5" fill="#0f172a">keywords</text>
+<text x="1220" y="969.0" font-size="11.5" fill="#334155">VARCHAR(255)</text>
+<text x="1320" y="969.0" font-size="10.5" fill="#64748b">space-separated</text>
+<text x="1094" y="995.5" font-size="12.5" fill="#0f172a">audience</text>
+<text x="1220" y="995.0" font-size="11.5" fill="#334155">ENUM</text>
+<text x="1320" y="995.0" font-size="10.5" fill="#64748b">STUDENT|LECTURER|ALL</text>
+<text x="1094" y="1021.5" font-size="12.5" fill="#0f172a">sort_order</text>
+<text x="1220" y="1021.0" font-size="11.5" fill="#334155">INT</text>
+<text x="1320" y="1021.0" font-size="10.5" fill="#64748b">DEFAULT 0</text>
+<text x="1094" y="1047.0" font-size="10.5" font-style="italic" fill="#64748b">created_at, updated_at, is_deleted, deleted_at, version</text>
+<text x="1094" y="1073.0" font-size="10.5" font-style="italic" fill="#64748b">FULLTEXT (question, keywords, answer)</text>
+<rect x="1530" y="450" width="440" height="690" rx="8" fill="#f8fafc" stroke="#94a3b8" stroke-width="2"/>
+<text x="1546" y="478" font-size="15" font-weight="bold" fill="#0f172a">Legend</text>
+<rect x="1546" y="488" width="23" height="16" rx="4" fill="#2563eb"/>
+<text x="1557.5" y="500" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#ffffff">PK</text>
+<text x="1576" y="500" font-size="11.5" fill="#1e293b">Primary key</text>
+<rect x="1681" y="488" width="23" height="16" rx="4" fill="#f59e0b"/>
+<text x="1692.5" y="500" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#ffffff">UK</text>
+<text x="1711" y="500" font-size="11.5" fill="#1e293b">Unique key</text>
+<rect x="1816" y="488" width="23" height="16" rx="4" fill="#16a34a"/>
+<text x="1827.5" y="500" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#ffffff">FK</text>
+<text x="1846" y="500" font-size="11.5" fill="#1e293b">Foreign key</text>
+<text x="1546" y="520" font-size="11.5" fill="#1e293b">AI = auto increment.  Dashed line = optional or logical link.</text>
+<text x="1546" y="546" font-size="15" font-weight="bold" fill="#0f172a">Relationships</text>
+<text x="1546" y="568" font-size="11.5" fill="#1e293b">1. A programme offers many students (1:N).</text>
+<text x="1546" y="586" font-size="11.5" fill="#1e293b">2. A group has many students (1:N); group_id NULL = Unassigned.</text>
+<text x="1546" y="604" font-size="11.5" fill="#1e293b">3. A student has 0..1 account; lecturer accounts have no student.</text>
+<text x="1546" y="622" font-size="11.5" fill="#1e293b">4. A student submits many requests (1:N).</text>
+<text x="1546" y="640" font-size="11.5" fill="#1e293b">5. A group receives many requests (1:N), as target or from-group.</text>
+<text x="1546" y="658" font-size="11.5" fill="#1e293b">6. An account creates many pending operations (1:N).</text>
+<text x="1546" y="676" font-size="11.5" fill="#1e293b">7. A pending operation has 0..1 receipt (1:0..1).</text>
+<text x="1546" y="694" font-size="11.5" fill="#1e293b">8. Programmes and groups appear in many timetable slots (optional).</text>
+<text x="1546" y="712" font-size="11.5" fill="#1e293b">9. claim_codes match students by student_number (no FK).</text>
+<text x="1546" y="730" font-size="11.5" fill="#1e293b">10. group_requests.resolved_by points to a lecturer account</text>
+<text x="1546" y="748" font-size="11.5" fill="#1e293b">      (FK exists, line not drawn).</text>
+<text x="1546" y="774" font-size="15" font-weight="bold" fill="#0f172a">Enums</text>
+<text x="1546" y="796" font-size="11.5" fill="#1e293b">group_requests.request_type: GROUP_CHANGE |</text>
+<text x="1546" y="814" font-size="11.5" fill="#1e293b">NUMBER_CORRECTION</text>
+<text x="1546" y="832" font-size="11.5" fill="#1e293b">pending_operations.status: PENDING | SYNCING | SYNCED |</text>
+<text x="1546" y="850" font-size="11.5" fill="#1e293b">      FAILED | CONFLICT</text>
+<text x="1546" y="876" font-size="15" font-weight="bold" fill="#0f172a">Key design notes</text>
+<text x="1546" y="898" font-size="11.5" fill="#1e293b">- Every table has a stable BIGINT AUTO_INCREMENT primary key.</text>
+<text x="1546" y="916" font-size="11.5" fill="#1e293b">- Audit columns: created_at, updated_at, is_deleted,</text>
+<text x="1546" y="934" font-size="11.5" fill="#1e293b">   deleted_at, version (optimistic locking for sync).</text>
+<text x="1546" y="952" font-size="11.5" fill="#1e293b">- Soft delete: student_number stays reserved after deletion.</text>
+<text x="1546" y="970" font-size="11.5" fill="#1e293b">- Max 15 active students per group, enforced in a</text>
+<text x="1546" y="988" font-size="11.5" fill="#1e293b">   transaction with SELECT ... FOR UPDATE on the group row.</text>
+<text x="1546" y="1006" font-size="11.5" fill="#1e293b">- operation_uuid + request_hash make retries safe</text>
+<text x="1546" y="1024" font-size="11.5" fill="#1e293b">   (same ID, same content = replay; different = reject).</text>
+<text x="1546" y="1042" font-size="11.5" fill="#1e293b">- timetable_slots and faqs are extras, outside the core rules.</text>
+<text x="1546" y="1060" font-size="11.5" fill="#1e293b">- MySQL 8.0.16+, InnoDB, utf8mb4. Fictitious data only.</text>
+</svg>
