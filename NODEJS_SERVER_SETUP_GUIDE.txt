@@ -1,0 +1,174 @@
+================================================================================
+CAMPUS COMPANION - NODE.JS & MYSQL BACKEND SETUP GUIDE
+Mulungushi University • ICT361 Android Group Project
+================================================================================
+
+This guide explains how to set up the Node.js / Express backend server with MySQL
+on your laptop, and how the Campus Companion Android app communicates with it.
+
+--------------------------------------------------------------------------------
+PART 1: PREREQUISITES
+--------------------------------------------------------------------------------
+Ensure the following tools are installed on your laptop:
+1. Node.js (version 18 or higher):
+   - Check by opening PowerShell and running: node -v
+   - If not installed, download from: https://nodejs.org/ (LTS version)
+
+2. MySQL Server (MySQL Community Server 8.0+ or XAMPP / WampServer):
+   - Check MySQL service is running in Windows Services or XAMPP Control Panel.
+   - Remember your MySQL root username and password.
+
+--------------------------------------------------------------------------------
+PART 2: DATABASE INITIALIZATION
+--------------------------------------------------------------------------------
+The backend includes all SQL scripts located in:
+  Student_Registration_Android_App\backend\sql\
+
+Open PowerShell or Command Prompt, navigate to the backend folder:
+  cd "C:\Users\Chanda Mubanga\Downloads\Project\Student_Registration_Android_App\backend"
+
+Run the SQL migration scripts in this exact order:
+
+Step 1: Create base schema (tables, lab groups G01-G04 with 15 capacity, programmes)
+  mysql -u root -p < sql\schema.sql
+
+Step 2: Add extended course, attendance, grades and timetable tables
+  mysql -u root -p < sql\02_courses_grades_attendance_timetable.sql
+
+Step 3: Add Campus Companion UI fields (avatars, lecturer display name, group schedule)
+  mysql -u root -p < sql\03_campus_companion_ui.sql
+
+(Enter your MySQL root password when prompted.)
+
+--------------------------------------------------------------------------------
+PART 3: CONFIGURING THE NODE.JS ENVIRONMENT
+--------------------------------------------------------------------------------
+1. In the backend folder, install dependencies:
+     npm install
+
+2. Create your environment configuration file:
+   Copy .env.example to .env:
+     copy .env.example .env
+
+3. Open the .env file in Notepad or VS Code and update your MySQL credentials:
+   -------------------------------------------------------------------
+   PORT=3000
+   DB_HOST=localhost
+   DB_PORT=3306
+   DB_USER=root
+   DB_PASSWORD=YOUR_MYSQL_PASSWORD_HERE
+   DB_NAME=student_registration
+   JWT_SECRET=supersecretjwtkeyforict361campuscompanion2026
+   LECTURER_INVITE_CODE=MU-STAFF-2026
+   -------------------------------------------------------------------
+
+4. Set up the demo accounts with verified bcrypt passwords:
+   Run the automated setup script:
+     npm run setup-demo
+
+   This will seed the database with:
+   * Lecturer Account:
+       Username : lecturer1
+       Password : Lecturer#2026
+       Name     : Dr. Mwansa
+       Avatar   : dog-1
+   * Student Account:
+       Username : 202408138
+       Password : Student#2026
+       Name     : Chanda Mubanga
+       Number   : 202408138 (CS, Group G01)
+       Avatar   : cat-1
+
+--------------------------------------------------------------------------------
+PART 4: STARTING THE SERVER
+--------------------------------------------------------------------------------
+Start the API server:
+  npm start
+
+You will see:
+  Campus Companion API listening on port 3000
+
+Verify in your browser by visiting:
+  http://localhost:3000/api/health
+You should receive:
+  {"status":"ok","app":"Campus Companion"}
+
+--------------------------------------------------------------------------------
+PART 5: HOW THE ANDROID APP COMMUNICATES WITH THE SERVER
+--------------------------------------------------------------------------------
+The Android application communicates with the backend via REST API calls
+using the internal CCApi client (with JWT Bearer tokens and X-Operation-Id
+for idempotent operations).
+
+A. When running in the Android Studio Emulator:
+   ------------------------------------------
+   - The Android Emulator runs in a virtual router. It cannot reach your laptop
+     at 'localhost' directly because 'localhost' inside the emulator is the
+     phone itself.
+   - The emulator uses the special alias 10.0.2.2 to reach your laptop!
+   - In Campus Companion:
+     1. Open the app in the emulator.
+     2. Open Settings (tap the top-left logo / profile icon or bottom Settings tab).
+     3. Under "Backend Server & Database Connection", the URL is already set to:
+          http://10.0.2.2:3000
+     4. Tap "Test Connection". The status pill will turn green:
+          [Live MySQL Server]
+     5. All student registrations, timetable edits, and transfers now persist
+        directly into MySQL on your laptop!
+
+B. When running on a Physical Android Phone:
+   -----------------------------------------
+   Method 1 (Wi-Fi):
+     1. Connect your phone and laptop to the same Wi-Fi network.
+     2. Find your laptop's local IP address by opening PowerShell and running:
+          ipconfig
+        Look for "IPv4 Address", e.g. 192.168.1.50.
+     3. On the phone app, go to Settings -> Backend Server Connection.
+     4. Set the URL to: http://192.168.1.50:3000 (replace with your IP).
+     5. Tap "Save URL" then "Test Connection".
+
+   Method 2 (USB Cable with ADB reverse):
+     1. Enable USB Debugging on your phone and connect via USB.
+     2. Open PowerShell and run:
+          adb reverse tcp:3000 tcp:3000
+     3. Now the phone can reach your laptop at http://127.0.0.1:3000!
+
+C. High-Fidelity Local Demo Fallback:
+   ----------------------------------
+   If your laptop server is closed or you are away from your laptop, the app
+   automatically falls back to its built-in high-fidelity local database.
+   The exact same rules apply (15-student group limit, unique 9-digit numbers,
+   role separation, and timetable editing) so you can present the app anytime.
+
+--------------------------------------------------------------------------------
+PART 6: VERIFYING KEY LAB REQUIREMENTS
+--------------------------------------------------------------------------------
+1. Role Access Enforcement:
+   - Select the "Lecturer" tab on the sign-in screen.
+   - Enter student credentials (202408138 / Student#2026).
+   - The app and server will REJECT access with HTTP 403 (ROLE_MISMATCH),
+     preventing students from accessing the lecturer workspace.
+   - Sign in on the "Student" tab to access student features.
+
+2. Lecturer Timetable Editing:
+   - Sign in as Lecturer (lecturer1 / Lecturer#2026).
+   - Go to the "Groups" tab.
+   - Under "Weekly Lab Schedule & Timetable", click "Edit Slot" on any group.
+   - Change day, start/end time, or room (e.g. Engineering Lab 3 -> Lab 5).
+   - Click "Update Timetable Slot". The schedule updates instantly in the UI
+     and saves via PUT /api/groups/:groupCode/schedule into MySQL!
+
+3. Profile Pictures (PFPs) & Mulungushi University Logo:
+   - When registering a new account, choose from 14 companion avatars (cats,
+     dogs, rabbits, sun, cloud).
+   - The chosen avatar displays in the top-left header button and profile card.
+   - In Settings, tap "Change Profile Picture" to switch avatars anytime.
+   - In Settings, customize accessibility color-blind filters and switch between
+     5 color themes (Navy & Sky Blue, Navy & Beige, Sky Blue & White, Midnight Navy,
+     and Mulungushi Purple).
+   - App Logo can be toggled between the official Mulungushi University Crest,
+     Navy Cap, and Sky Book.
+
+================================================================================
+END OF GUIDE • MULUNGUSHI UNIVERSITY ICT361
+================================================================================
