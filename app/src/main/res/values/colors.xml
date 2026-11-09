@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- 60-30-10 Color Scheme -->
+    <color name="color_primary">#50207A</color>
+    <color name="color_primary_dark">#3B165C</color>
+    <color name="color_accent">#838CE5</color>
+    <color name="color_lilac">#D6B9FC</color>
+    <color name="color_background">#F8F7FC</color>
+    <color name="color_surface">#FFFFFF</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="ic_launcher_bg">#FFFFFFFF</color>
 </resources>

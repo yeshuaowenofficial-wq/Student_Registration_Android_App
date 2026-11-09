@@ -12,8 +12,8 @@ android {
         applicationId = "com.example.ict361_lab"
         minSdk = 24
         targetSdk = 37
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "2.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -31,6 +31,18 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
+    }
+
+    flavorDimensions += "version"
+    productFlavors {
+        create("base") {
+            dimension = "version"
+        }
+        create("beta") {
+            dimension = "version"
+            applicationIdSuffix = ".beta"
+        }
     }
 }
 

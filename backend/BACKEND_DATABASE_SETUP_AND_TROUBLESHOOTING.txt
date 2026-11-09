@@ -1,0 +1,230 @@
+================================================================================
+CAMPUS COMPANION - BACKEND & DATABASE SETUP AND TROUBLESHOOTING GUIDE
+================================================================================
+Target Audience: Anyone receiving the backend package to host the server for the
+                 Campus Companion Android Application.
+Author / Notes:  Chanda Mubanga (ICT361 Project)
+Date:            October 2026
+
+--------------------------------------------------------------------------------
+TABLE OF CONTENTS
+--------------------------------------------------------------------------------
+1. Prerequisites
+2. Quick Start: How to Set Up the Database & Start the Server
+3. Real Problems Encountered & Exactly How They Were Fixed (Troubleshooting)
+4. How the Android App Connects to the Database
+5. Demo Accounts & Verification Credentials
+
+================================================================================
+1. PREREQUISITES
+================================================================================
+Ensure the host machine has the following installed:
+- Node.js (v18.x or v20+ / LTS recommended)
+  Download: https://nodejs.org/
+- MySQL Server 8.0+
+  Download: https://dev.mysql.com/downloads/mysql/
+  Default port: 3306
+
+================================================================================
+2. QUICK START: HOW TO SET UP THE DATABASE & START THE SERVER
+================================================================================
+
+STEP 1: Configure the Environment (.env)
+----------------------------------------
+In the `backend` folder, check if `.env` exists. If not, copy `.env.example`:
+  Copy-Item .env.example .env
+
+Open `.env` in Notepad and configure:
+-------------------------------------------------------------------
+PORT=3000
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=YOUR_ACTUAL_MYSQL_ROOT_PASSWORD
+DB_NAME=student_registration
+JWT_SECRET=8492015839201475829104829104857201948271049281740291847291048291
+LECTURER_INVITE_CODE=MU-STAFF-2026
+-------------------------------------------------------------------
+
+STEP 2: Import Database Schema into MySQL (Choose V1 Baseline OR V2 14-Group Release)
+--------------------------------------------------------------------------------------
+Open PowerShell in the `backend` directory.
+
+OPTION A: VERSION 2.0 (Official 14 Lab Groups & 208 Spreadsheet Students Ingestion)
+-----------------------------------------------------------------------------------
+Run the single consolidated Version 2.0 SQL script:
+
+   & "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p < sql\v2.0_schema_and_spreadsheet_seed.sql
+
+This single command sets up:
+- Complete Version 2.0 schema with `schema_version` set to '2.0.0'.
+- 14 Lab Groups (G01 through G14) with up to 20 capacity each.
+- 208 real student records from the official Mulungushi spreadsheet cleanly ingested
+  and placed into their respective groups G01 through G14.
+- Programme normalization to Computer Science (CS), Information Technology (IT), and ICT with Education (ITED).
+- Weekly Lab Schedule evenly split across 7 slots based on the official EduRole timetable.
+- Pre-seeded Demo Accounts:
+    * Lecturer: username `lecturer1` / password `Lecturer#2026`
+    * Student:  username `202408138` / password `Student#2026` (Chanda Mubanga, Group 7)
+- Any student from the spreadsheet can immediately register with their 9-digit student number,
+  set a password, and claim their account to view their assigned group!
+
+OPTION B: VERSION 1.0 (Baseline Release - 4 Lab Groups)
+-------------------------------------------------------
+If you need the classic 4-group Version 1.0 baseline:
+
+   & "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p < sql\v1.0_complete_schema_and_seed.sql
+
+STEP 3: Install Node Modules & Seed Demo Accounts
+------------------------------------------------
+In the `backend` directory, run:
+   npm install
+   npm run setup-demo
+
+This installs required dependencies (express, mysql2, bcrypt, jsonwebtoken, helmet)
+and creates the demo student and lecturer accounts with pre-hashed bcrypt passwords.
+
+STEP 4: Start the Server
+------------------------
+Run:
+   npm start
+
+Expected output:
+   Campus Companion API listening on port 3000
+
+Test in your browser:
+   http://localhost:3000/api/health
+   -> Output: {"status":"ok","app":"Campus Companion"}
+
+================================================================================
+3. REAL PROBLEMS ENCOUNTERED & EXACTLY HOW THEY WERE FIXED
+================================================================================
+
+PROBLEM 1: "'mysql' is not recognized as an internal or external command"
+------------------------------------------------------------------------
+- Cause:
+  MySQL was installed, but its `bin` directory (`C:\Program Files\MySQL\MySQL Server 8.0\bin`)
+  was not added to Windows system PATH environment variables.
+- Fix:
+  Either call the full path directly in PowerShell using the call operator `&`:
+    & "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p ...
+  Or add `C:\Program Files\MySQL\MySQL Server 8.0\bin` to System Environment Variables -> Path.
+
+------------------------------------------------------------------------
+PROBLEM 2: "ERROR 2003 (HY000): Can't connect to MySQL server on 'localhost:3306' (10061)"
+------------------------------------------------------------------------
+- Cause:
+  The MySQL Windows Service was stopped or paused.
+- Fix:
+  1. Press Win + R, type `services.msc`, and hit Enter.
+  2. Locate `MySQL80` (or `MySQL`).
+  3. Right-click and select "Start" (or "Restart").
+  4. Alternatively, in Administrator PowerShell: `Start-Service MySQL80`.
+
+------------------------------------------------------------------------
+PROBLEM 3: "ERROR 1050 (42S01): Table 'programmes' already exists"
+------------------------------------------------------------------------
+- Cause:
+  `schema.sql` was executed on a database that had already been partially imported
+  during a previous attempt.
+- Fix:
+  Drop and re-create a clean slate before importing:
+    & "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p -e "DROP DATABASE IF EXISTS student_registration; CREATE DATABASE student_registration;"
+  Then re-import `schema.sql`, `02_courses...sql`, and `03_campus...sql`.
+
+------------------------------------------------------------------------
+PROBLEM 4: "Cannot find module 'mysql2/promise'" or DB not connecting
+------------------------------------------------------------------------
+- Cause:
+  Dependencies were not yet installed via npm in the `backend` directory, or
+  `.env` was missing so MySQL connection fell back to an empty password.
+- Fix:
+  1. Ensure `.env` exists with the correct `DB_PASSWORD`.
+  2. Run `npm install` in the backend folder.
+  3. Run `npm run setup-demo`.
+
+------------------------------------------------------------------------
+PROBLEM 5: "Error: listen EADDRINUSE: address already in use 0.0.0.0:3000"
+------------------------------------------------------------------------
+- Cause:
+  A previous Node.js server instance was already running in the background and
+  holding onto port 3000.
+- Fix:
+  Kill running Node processes before starting:
+    PowerShell: Stop-Process -Name node -Force
+  Then run `npm start` again.
+
+------------------------------------------------------------------------
+PROBLEM 6: "Could not reach IP on Wi-Fi" from a Physical Phone
+------------------------------------------------------------------------
+There are TWO distinct reasons for this:
+- Reason A: Windows Defender Firewall blocks incoming port 3000 requests.
+  Fix: Open PowerShell as Administrator and run:
+    New-NetFirewallRule -DisplayName "Campus Companion Port 3000" -Direction Inbound -LocalPort 3000 -Protocol TCP -Action Allow
+- Reason B: Modern Android blocks plain HTTP (`http://`) traffic to LAN IPs.
+  Fix: In the app's `network_security_config.xml`, enable cleartext traffic:
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors><certificates src="system" /></trust-anchors>
+    </base-config>
+  (This is already baked into the updated `app-debug.apk`).
+
+------------------------------------------------------------------------
+PROBLEM 7: "Claim code not recognised" during Student Registration
+------------------------------------------------------------------------
+- Cause:
+  The `claim_codes` table in MySQL was empty, so the self-registration endpoint
+  rejected unregistered student codes.
+  Also, existing demo student `202408138` does NOT need registration—it is already
+  an active account and should be signed into directly via "Sign In".
+- Fix:
+  1. For existing demo student `202408138`: Use "Sign In" (not "Register").
+  2. For registering a NEW student: Insert claim codes into MySQL:
+     INSERT INTO claim_codes (claim_code, student_number) VALUES ('MU-STUDENT-2026', NULL);
+     Students then enter `MU-STUDENT-2026` as their referral/claim code.
+
+================================================================================
+4. HOW THE ANDROID APP CONNECTS TO THE DATABASE
+================================================================================
+
+Case 1: Running on a Physical Phone via Local Wi-Fi
+---------------------------------------------------
+1. Both the laptop running Node.js and the phone must be on the SAME Wi-Fi network.
+2. Find the laptop's IPv4 address by running `ipconfig` in PowerShell:
+   Look under "Wireless LAN adapter Wi-Fi" -> IPv4 Address (e.g., 192.168.1.37).
+3. Open the Campus Companion app on the phone.
+4. Go to Settings (tap the top-left avatar/logo or the Settings icon at the bottom).
+5. Under "Backend Server & Database Connection", enter:
+     http://<LAPTOP_IP>:3000    (e.g., http://192.168.1.37:3000)
+6. Tap "Test Connection". The pill indicator will turn green:
+     [Live MySQL Server]
+
+Case 2: Running in Android Studio Emulator
+------------------------------------------
+Inside the Android Emulator, `localhost` refers to the virtual phone itself.
+Use the special emulator loopback alias:
+   http://10.0.2.2:3000
+
+================================================================================
+5. DEMO ACCOUNTS & VERIFICATION CREDENTIALS
+================================================================================
+
+1. LECTURER DEMO ACCOUNT
+   - Role / Tab : Lecturer
+   - Username   : lecturer1
+   - Password   : Lecturer#2026
+   - Profile    : Dr. Mwansa (Avatar: dog-1)
+   - Privileges : View/edit student groups, edit timetable schedules.
+
+2. STUDENT DEMO ACCOUNT
+   - Role / Tab : Student
+   - Username   : 202408138
+   - Password   : Student#2026
+   - Profile    : Chanda Mubanga (CS, Group G01, Avatar: cat-1)
+
+3. CODES FOR REGISTERING NEW USERS
+   - Lecturer Invite Code  : MU-STAFF-2026
+   - Student Referral Code : MU-STUDENT-2026 (or CLAIM-1001)
+
+================================================================================
+END OF GUIDE
+================================================================================

@@ -1,0 +1,167 @@
+================================================================================
+CAMPUS COMPANION - NODE.JS & MYSQL BACKEND SETUP GUIDE (v2.0)
+Mulungushi University • ICT361 Android Group Project
+================================================================================
+
+This guide explains how to set up and run the current Node.js / Express backend
+server with MySQL for the Campus Companion Android app.
+
+--------------------------------------------------------------------------------
+PART 1: PREREQUISITES
+--------------------------------------------------------------------------------
+Ensure the following tools are installed on your laptop:
+1. Node.js (version 18 or higher):
+   - Check in PowerShell:
+       node -v
+   - Download from: https://nodejs.org/ (LTS version)
+
+2. MySQL Server (MySQL Community Server 8.0+ or XAMPP / WampServer):
+   - Check that the MySQL service is running in Windows Services (`services.msc`)
+     or XAMPP Control Panel.
+   - Default port is 3306.
+
+--------------------------------------------------------------------------------
+PART 2: DATABASE INITIALIZATION (VERSION 2.0 CONSOLIDATED SCRIPT)
+--------------------------------------------------------------------------------
+The backend now uses a single, consolidated SQL file that sets up all tables,
+the 14 lab groups (G01–G14 with a strict 15-student capacity limit), 208 real
+students from the official spreadsheet, and the timetable sessions.
+
+Open PowerShell as Administrator (or standard PowerShell) and navigate to the backend folder:
+   cd "C:\Users\Chanda Mubanga\Pictures\backend"
+   (Or in your project mirror: cd "...\Student_Registration_Android_App\backend")
+
+Run the Version 2.0 SQL script directly into MySQL:
+
+   & "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p < sql\v2.0_schema_and_spreadsheet_seed.sql
+
+   (Or if mysql is in your system PATH:)
+   mysql -u root -p < sql\v2.0_schema_and_spreadsheet_seed.sql
+
+(Enter your MySQL root password when prompted.)
+
+This single script sets up:
+- Complete database: `student_registration` (schema version 2.0.0).
+- 14 Lab Groups (G01 to G14) strictly capped at 15 members max.
+- 208 real student records from the official spreadsheet.
+- Weekly lab timetable split across CS (3 sessions), IT (2 sessions), and ITED (2 sessions).
+- Pre-hashed demo accounts (Dr. Mwansa & Chanda Mubanga).
+- Self-registration claim codes ('MU-STUDENT-2026', 'CLAIM-AAA111', etc.).
+
+--------------------------------------------------------------------------------
+PART 3: CONFIGURING THE ENVIRONMENT (.env)
+--------------------------------------------------------------------------------
+1. In the `backend` folder, check if `.env` exists. If not, copy `.env.example`:
+     Copy-Item .env.example .env
+
+2. Open `.env` in Notepad and verify your MySQL password:
+   -------------------------------------------------------------------
+   PORT=3000
+   DB_HOST=localhost
+   DB_PORT=3306
+   DB_USER=root
+   DB_PASSWORD=YOUR_ACTUAL_MYSQL_ROOT_PASSWORD
+   DB_NAME=student_registration
+   JWT_SECRET=8492015839201475829104829104857201948271049281740291847291048291
+   LECTURER_INVITE_CODE=MU-STAFF-2026
+   -------------------------------------------------------------------
+
+3. Install project dependencies:
+     npm install
+
+--------------------------------------------------------------------------------
+PART 4: STARTING THE SERVER
+--------------------------------------------------------------------------------
+Start the API server:
+   npm start
+
+(Or for auto-reload during development: `npm run dev`)
+
+You should see:
+   Campus Companion API listening on port 3000
+
+Verify in your browser by opening:
+   http://localhost:3000/api/health
+You should receive:
+   {"status":"ok","app":"Campus Companion"}
+
+--------------------------------------------------------------------------------
+PART 5: HOW THE ANDROID APP CONNECTS
+--------------------------------------------------------------------------------
+The Android application communicates with the backend via REST API calls
+using JWT Bearer tokens and idempotency keys.
+
+A. When running in the Android Studio Emulator:
+   ------------------------------------------
+   - The emulator uses loopback IP `10.0.2.2` to reach your laptop.
+   - In Campus Companion:
+     1. Open the app in the emulator.
+     2. In the top-right of the Sign-In screen, tap the gear icon, or go to
+        Settings -> Backend Server Connection.
+     3. Ensure the URL is set to:
+          http://10.0.2.2:3000
+     4. Tap "Test Connection". The status badge turns green:
+          [Live MySQL Server]
+
+B. When running on a Physical Android Phone:
+   -----------------------------------------
+   Method 1 (Local Wi-Fi / University Wi-Fi 172.x.x.x):
+     1. Ensure laptop and phone are connected to the SAME Wi-Fi network.
+     2. Run `ipconfig` in PowerShell and look for "IPv4 Address", e.g. 192.168.1.37 or 172.16.x.x.
+     3. On the phone app, open Settings -> Backend Server Connection (or tap the gear on Login).
+     4. Set URL to: http://<YOUR-IP>:3000 (e.g. http://172.16.14.88:3000).
+     5. Tap "Save URL" then "Test Connection".
+     * IMPORTANT FOR UNIVERSITY WI-FI (172 RANGE) & WINDOWS FIREWALL:
+       Windows marks University Wi-Fi as a "Public Network" and drops incoming connections.
+       Run this in PowerShell as Administrator to open ports 3000 and 41234:
+         New-NetFirewallRule -DisplayName "Campus Companion API (3000)" -Direction Inbound -LocalPort 3000 -Protocol TCP -Action Allow
+         New-NetFirewallRule -DisplayName "Campus Companion Discovery (41234)" -Direction Inbound -LocalPort 41234 -Protocol UDP -Action Allow
+       If campus router AP Isolation blocks device-to-device Wi-Fi traffic, use Method 2 (USB) or a phone hotspot.
+
+   Method 2 (USB Cable with ADB Reverse — 100% Guaranteed):
+     1. Enable USB Debugging on phone and connect via USB.
+     2. Run in PowerShell:
+          adb reverse tcp:3000 tcp:3000
+     3. Now the phone can connect to: http://127.0.0.1:3000
+
+   Method 3 (Beta App Auto-Discovery — Experimental):
+     1. In the Beta app (Campus Companion Beta), tap "Auto-Detect Server".
+     2. The app pings port 41234 on Wi-Fi and automatically locates the server URL.
+
+C. Shared Backend for BaseV2 and BetaV1:
+   -----------------------------------
+   One running backend (`npm start`) simultaneously serves both `baseV2.apk`
+   and `BetaV1.apk` on the same database.
+
+D. Local Demo Mode (Offline Fallback):
+   -----------------------------------
+   If the laptop server is offline, the app seamlessly runs on its built-in
+   offline local database cache, displaying "Database not connected" until
+   the server is reachable.
+
+--------------------------------------------------------------------------------
+PART 6: DEMO CREDENTIALS & CAPABILITIES
+--------------------------------------------------------------------------------
+1. Lecturer Account:
+   - Tab / Role : Lecturer
+   - Username   : lecturer1
+   - Password   : Lecturer#2026
+   - Profile    : Dr. Mwansa (Avatar: dog-1)
+   - Privileges : Add new lab groups (+ Add Group), edit timetable slots,
+                 assign/transfer students, approve/reject student requests.
+
+2. Student Account:
+   - Tab / Role : Student
+   - Username   : 202408138
+   - Password   : Student#2026
+   - Profile    : Chanda Mubanga (CS, Group G07, Avatar: cat-1)
+   - Privileges : View own group members and schedule slot, submit group
+                 transfer or number correction requests.
+
+3. Codes for Registering New Users:
+   - Lecturer Staff Code : MU-STAFF-2026
+   - Student Claim Code  : MU-STUDENT-2026 (or CLAIM-AAA111)
+
+================================================================================
+END OF GUIDE • MULUNGUSHI UNIVERSITY ICT361
+================================================================================
